@@ -39,6 +39,7 @@ div.task{
   display:flex;
   align-items: center;
   transition: opacity .3s linear;
+  align-items: center;
 }
 div.task svg{
   height: 20px;
@@ -48,4 +49,30 @@ div.task svg{
 div.task.done{
   opacity: 0.5;
   text-decoration: line-through;
+}
+
+div.task span{
+  position:relative;
+}
+
+div.task-name{
+  flex-grow: 1;;
+
+}
+
+div.checkbox{
+  display: flex;
+  align-items: center;
+}
+
+button.trash{
+  background: none;
+  border: none;
+  display: flex;
+  cursor: pointer;
+}
+
+button.trash svg{
+  fill: #888;
+  height: 14px;
 }
