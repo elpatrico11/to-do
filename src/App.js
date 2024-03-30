@@ -5,21 +5,16 @@ import { useEffect, useState } from 'react';
 
 function App() {
 
-  const [tasks, setTasks] = useState([]);
+  
+
+  const [tasks, setTasks] = useState(() => {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+    return storedTasks ?? [] ;
+  });
 
   useEffect(() => {
-    if(tasks.length === 0) {
-      return;
-    }
-    localStorage.setItem('tasks', JSON.stringify(tasks))
-  }, 
-  [tasks])
-
-
-  useEffect(() => {
-    const tasks = JSON.parse(localStorage.getItem('tasks'));
-    setTasks(tasks || []);
-  }, [])
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   function addTask(name) {
     setTasks(prev=> {
@@ -35,13 +30,22 @@ function App() {
     });
   }
   
+  function removeTask(indexToRemove) {
+    setTasks(prev => {
+      return prev.filter((taskObject, index) => {
+        return index !== indexToRemove;
+      });
+    })
+  }
 
   return (
     <main>
       <TaskForm onAdd={addTask}/>
       {/* Map over tasks and render Task component for each task */}
       {tasks.map((task, index) => (
-        <Task {...task} onToggle = {done => updateTaskDone(index, done)} />
+        <Task {...task} 
+        onDelete={() => removeTask(index)}
+        onToggle = {done => updateTaskDone(index, done)} />
       ))}
     </main>
   );
