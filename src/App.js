@@ -18,12 +18,20 @@ function App() {
 
   useEffect(() => {
     const tasks = JSON.parse(localStorage.getItem('tasks'));
-    setTasks(tasks);
+    setTasks(tasks || []);
   }, [])
 
   function addTask(name) {
     setTasks(prev=> {
       return [...prev, {name:name, done:false}];
+    });
+  }
+
+  function updateTaskDone(taskIndex, newDone) {
+    setTasks(prev =>{
+      const newTasks = [...prev];
+      newTasks[taskIndex].done = newDone;
+      return newTasks;
     });
   }
   
@@ -33,7 +41,7 @@ function App() {
       <TaskForm onAdd={addTask}/>
       {/* Map over tasks and render Task component for each task */}
       {tasks.map((task, index) => (
-        <Task key={index} name={task.name} done={task.done} />
+        <Task {...task} onToggle = {done => updateTaskDone(index, done)} />
       ))}
     </main>
   );
