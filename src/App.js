@@ -1,7 +1,11 @@
+import bootstrap from 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TaskForm from "./TaskForm";
 import Task from "./Task";
 import { useEffect, useState } from 'react';
+import Footer from './Footer';
+import CountTasks from './CountTasks';
+
 
 function App() {
 
@@ -40,13 +44,19 @@ function App() {
 
   return (
     <main>
+      <CountTasks tasks={tasks}/>
       <TaskForm onAdd={addTask}/>
+      
       {/* Map over tasks and render Task component for each task */}
       {tasks.map((task, index) => (
         <Task {...task} 
         onDelete={() => removeTask(index)}
         onToggle = {done => updateTaskDone(index, done)} />
+        
+        
       ))}
+      
+      <Footer/>
     </main>
   );
 }
