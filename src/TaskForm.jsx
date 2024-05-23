@@ -2,13 +2,16 @@ import { useState } from "react";
 
 export default function TaskForm({ onAdd }) {
   const [taskName, setTaskName] = useState('');
-  const [isDaily, setIsDaily] = useState(false); // State to track whether the task is daily
+  const [isDaily, setIsDaily] = useState(false);
 
   function handleSubmit(ev) {
     ev.preventDefault();
-    onAdd(taskName, isDaily); // Pass isDaily along with taskName
-    setTaskName('');
-    setIsDaily(false); // Reset isDaily after adding the task
+    if (taskName.trim() !== '') { // Check if taskName is not empty
+      console.log("Adding task:", taskName, "Is Daily:", isDaily);
+      onAdd(taskName, isDaily);
+      setTaskName('');
+      setIsDaily(false);
+    }
   }
 
   return (
@@ -19,7 +22,6 @@ export default function TaskForm({ onAdd }) {
         onChange={ev => setTaskName(ev.target.value)}
         placeholder="Your next task..."
       />
-      {/* Add a checkbox to toggle daily task */}
       <label>
         Daily Task:
         <input
