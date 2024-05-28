@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Navbar, Nav, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TaskForm from "./TaskForm";
@@ -9,7 +11,7 @@ import CountTasks from './CountTasks';
 import axios from 'axios';
 import store, { setTasks, addTask, updateTaskDone, removeTask } from './store';
 
-function App() {
+function Home() {
   const tasks = useSelector(state => state.tasks.tasks);
   const dispatch = useDispatch();
 
@@ -70,6 +72,36 @@ function App() {
       ))}
       <Footer />
     </main>
+  );
+}
+
+function About() {
+  return (
+    <div>
+      <h2>About</h2>
+      <p>This is a task management application.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Navbar bg="light" expand="lg" className="navbar">
+          <Navbar.Brand href="/">Task Manager</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="/">Home</Nav.Link>
+              <Nav.Link as={Link} to="/about">About</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+      </Navbar>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </Router>
   );
 }
 
