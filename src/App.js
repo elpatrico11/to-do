@@ -1,57 +1,54 @@
+import React, { useEffect } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TaskForm from "./TaskForm";
 import Task from "./Task";
-import { useEffect, useState } from 'react';
 import Footer from './Footer';
 import CountTasks from './CountTasks';
 import axios from 'axios';
+import store, { setTasks, addTask, updateTaskDone, removeTask } from './store';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const tasks = useSelector(state => state.tasks.tasks);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios.get('http://localhost:5000/todos')
       .then(response => {
-        console.log("Fetched tasks:", response.data.data); // Dodaj ten wiersz
-        setTasks(response.data.data);
+        dispatch(setTasks(response.data.data));
       })
       .catch(error => {
         console.error('There was an error fetching the tasks!', error);
       });
-  }, []);
+  }, [dispatch]);
 
-  function addTask(name, isDaily) {
+  function handleAddTask(name, isDaily) {
     axios.post('http://localhost:5000/todos', { task: name, isDaily })
       .then(response => {
-        console.log("Added task:", response.data.data); // Dodaj ten wiersz
-        setTasks(prev => [...prev, response.data.data]);
+        dispatch(addTask(response.data.data));
       })
       .catch(error => {
         console.error('There was an error adding the task!', error);
       });
   }
 
-  function updateTaskDone(taskIndex, newDone) {
+  function handleUpdateTaskDone(taskIndex, newDone) {
     const task = tasks[taskIndex];
     axios.put(`http://localhost:5000/todos/${task.id}`, { done: newDone })
-      .then(response => {
-        setTasks(prev => {
-          const newTasks = [...prev];
-          newTasks[taskIndex] = { ...newTasks[taskIndex], done: newDone };
-          return newTasks;
-        });
+      .then(() => {
+        dispatch(updateTaskDone({ index: taskIndex, done: newDone }));
       })
       .catch(error => {
         console.error('There was an error updating the task!', error);
       });
   }
 
-  function removeTask(indexToRemove) {
+  function handleRemoveTask(indexToRemove) {
     const task = tasks[indexToRemove];
     axios.delete(`http://localhost:5000/todos/${task.id}`)
       .then(() => {
-        setTasks(prev => prev.filter((_, index) => index !== indexToRemove));
+        dispatch(removeTask(indexToRemove));
       })
       .catch(error => {
         console.error('There was an error deleting the task!', error);
@@ -61,19 +58,25 @@ function App() {
   return (
     <main>
       <CountTasks tasks={tasks} />
-      <TaskForm onAdd={addTask} />
-          {tasks.map((task, index) => (
-      <Task 
-        key={task.id}
-        name={task.task} // Ensure that task name is passed as 'name' prop
-        done={task.done}
-        onToggle={done => updateTaskDone(index, done)} 
-        onDelete={() => removeTask(index)}
-      />
-    ))}
+      <TaskForm onAdd={handleAddTask} />
+      {tasks.map((task, index) => (
+        <Task 
+          key={task.id}
+          name={task.task}
+          done={task.done}
+          onToggle={done => handleUpdateTaskDone(index, done)} 
+          onDelete={() => handleRemoveTask(index)}
+        />
+      ))}
       <Footer />
     </main>
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
