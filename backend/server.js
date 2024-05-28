@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const port = 5000;
@@ -33,7 +34,7 @@ app.get('/todos', (req, res) => {
 
 app.post('/todos', (req, res) => {
     const { task, isDaily } = req.body;
-    console.log("Received task:", task, "Is Daily:", isDaily); // Dodaj ten wiersz
+    console.log("Received task:", task, "Is Daily:", isDaily);
     if (!task) {
         return res.status(400).json({ "error": "Task content is required" });
     }
@@ -73,6 +74,14 @@ app.put('/todos/:id', (req, res) => {
             "data": { id, done }
         });
     });
+});
+
+// Serve React static files
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Catch-all route to serve React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(port, () => {

@@ -2,6 +2,8 @@
   "name": "to-do",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://elpatrico11.github.io/to-do",
+
   "dependencies": {
     "@coreui/coreui": "^5.0.1",
     "@coreui/react": "^5.0.0",
@@ -16,6 +18,7 @@
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "mdb-react-ui-kit": "^8.0.0",
+    "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
@@ -28,6 +31,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -47,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }

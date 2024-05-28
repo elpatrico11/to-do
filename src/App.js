@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import './App.scss';
 import TaskForm from "./TaskForm";
 import Task from "./Task";
 import Footer from './Footer';
